@@ -9,7 +9,7 @@ def connect_docker_tcp():
         container_id = str(container).split(':')[1][1:-1]
         container = cli.containers.get(container_id)
         container_name = container.attrs['Config']['Image']
-        running_containers_names += container_name
+        running_containers_names += container_name + ', '
 
     if running_containers_names[-1] == ',':
         running_containers_names = running_containers_names[:-1]
