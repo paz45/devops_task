@@ -1,0 +1,35 @@
+job number 1 - a pipeline job for cloning my project:
+
+pipelineJob('q1_github-clone') {
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        github('paz45/devops_task')
+                    }
+                }
+            }
+            scriptPath('environmentInStage.groovy')
+        }
+    }
+}
+
+job number 2 - docker-compose build with proxy-pass (reverse proxy via nginx):
+
+job('q4_build') {
+    steps {
+    	customWorkspace('/var/lib/jenkins/workspace/github-clone/')
+    	shell('sudo docker-compose build')
+    }
+}
+
+job number 3 - running the 2 containers and verifing if the nginx service is up:
+
+job('q5_run_and_verification') {
+    steps {
+        customWorkspace('/var/lib/jenkins/workspace/q1_github-clone/')
+      	shell('sudo docker-compose up -d')
+        shell('sudo ./q5.sh')
+    }
+}
