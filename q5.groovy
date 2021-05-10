@@ -1,4 +1,4 @@
- def get = new URL("localhost:5000").openConnection();
+ def get = new URL("https:/0.0.0.0:5000").openConnection();
  def getRC = get.getResponseCode();
  println(getRC);
  if(getRC.equals(200)) {
