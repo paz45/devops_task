@@ -1,7 +1,14 @@
-#!/bin/sh
-sudo docker run -d --name nginx -p 5000:80 paz45/nginx
-sudo docker run -d --name flask -p 80:80 paz45/flask
-http_code=$(curl -LI http://0.0.0.0:5000 -o /dev/null -w '%{http_code}\n' -s)
-if [ ${http_code} -eq 200 ]; then
-    echo 'OK'
-fi
+#!/bin/bash
+set -eux
+
+declare -r HOST="0.0.0.0:5000"
+
+wait-for-url() {
+    echo "Testing $1"
+    timeout -s TERM 10 bash -c \
+    'while [[ "$(curl -s -o /dev/null -L -w ''%{http_code}'' ${0})" != "200" ]];\
+    do echo "Waiting for ${0}" && sleep 2;\
+    done' ${1}
+    echo "OK"
+}
+wait-for-url ${HOST}
